@@ -187,12 +187,17 @@ textarea {
 }
 
 .task-add-area input {
+  /* 残りのスペースをすべて入力欄に割り当てる */
   flex: 1;
+  min-width: 0; /* flex内でテキストが見切れないようにする */
 }
 
 .task-add-area button {
   white-space: nowrap;
   padding: 0.625rem 1rem;
+  /* btn-primary の width:100% を打ち消して追加ボタンだけ幅を内容に合わせる */
+  width: auto;
+  flex-shrink: 0;
 }
 
 /* タスクリスト */
