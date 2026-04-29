@@ -8,7 +8,7 @@ QAエンジニアとしての実力を示すポートフォリオプロジェク
 ## デモURL
 
 GitHub Pages で公開中：  
-🔗 （公開後に追記）
+🔗 https://tklm14.github.io/demo-qa-portfolio/
 
 デモアカウント：`demo@example.com` / `Demo1234`
 
