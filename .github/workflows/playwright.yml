@@ -1,0 +1,49 @@
+# GitHub Actions ワークフロー
+# main ブランチへの push / PR のたびに Playwright テスト（E2E + API）を自動実行する
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # リポジトリのコードをチェックアウトする
+      - uses: actions/checkout@v4
+
+      # Node.js 20 をセットアップする
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 依存パッケージをインストールする
+      - name: Install dependencies
+        run: npm ci
+
+      # Playwright が使用するブラウザ（Chromium）をインストールする
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # E2Eテスト（UIテスト）を実行する
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      # APIテストを実行する
+      - name: Run API tests
+        run: npm run test:api
+
+      # テスト結果レポートをアーティファクトとして保存する
+      # 失敗した場合でも保存することでデバッグに活用できる
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
