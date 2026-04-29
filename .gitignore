@@ -3,3 +3,7 @@ dist/
 playwright-report/
 test-results/
 .playwright/
+
+# 個人用ドキュメント（GitHubには公開しない）
+CLAUDE.md
+LEARNING.md
