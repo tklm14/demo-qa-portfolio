@@ -3,7 +3,9 @@ import { resolve } from 'path'
 
 export default defineConfig({
   root: 'src',
-  base: '/',
+  // GitHub Pagesへデプロイする際はリポジトリ名をbaseに設定する
+  // ローカル開発・CI（テスト実行）時は'/'のまま
+  base: process.env.VITE_BASE ?? '/',
   build: {
     outDir: '../dist',
     emptyOutDir: true,

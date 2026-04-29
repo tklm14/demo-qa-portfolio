@@ -1,0 +1,48 @@
+# GitHub Pages デプロイワークフロー
+# main ブランチへのpushのたびにアプリをビルドして GitHub Pages へ公開する
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+# Pages への書き込み権限を付与する
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # GitHub Pages では /demo-qa-portfolio/ がベースパスになるため
+      # VITE_BASE 環境変数で Vite のビルド設定を切り替える
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BASE: /demo-qa-portfolio/
+
+      # dist/ フォルダを Pages アーティファクトとしてアップロードする
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+      # Pages へデプロイして公開URLを出力する
+      - id: deployment
+        uses: actions/deploy-pages@v4
