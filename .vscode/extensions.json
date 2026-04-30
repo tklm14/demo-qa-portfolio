@@ -1,0 +1,9 @@
+{
+  // このプロジェクトで推奨するVSCode拡張機能
+  "recommendations": [
+    // Playwright公式拡張：テストをUIから実行・デバッグできる（最も簡単な方法）
+    "ms-playwright.playwright",
+    // TypeScript補完を強化する
+    "ms-vscode.vscode-typescript-next"
+  ]
+}
