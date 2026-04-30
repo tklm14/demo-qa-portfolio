@@ -22,7 +22,11 @@ export default defineConfig({
       // E2Eテスト：ブラウザを使ったUIテスト
       name: 'e2e',
       testDir: './tests/e2e',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // デバッグ時に操作を遅くして目で追えるようにする（デフォルトは0ms＝高速）
+        launchOptions: { slowMo: 500 },
+      },
     },
     {
       // APIテスト：ブラウザなし、HTTPリクエストのみ

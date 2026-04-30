@@ -1,7 +1,7 @@
 # demo-qa-portfolio
 
 QAエンジニアとしての実力を示すポートフォリオプロジェクトです。  
-シンプルなタスク管理アプリを対象に、**E2Eテスト（UIテスト）** と **APIテスト** を Playwright + TypeScript で実装しています。
+シンプルなタスク管理アプリを対象に、**ユニットテスト・E2Eテスト（UIテスト）・APIテスト** の3層構造を Playwright + Vitest + TypeScript で実装しています。
 
 ---
 
@@ -19,7 +19,8 @@ GitHub Pages で公開中：
 | 分類 | 技術 |
 |------|------|
 | アプリ | HTML + TypeScript + Vite |
-| テスト | Playwright + TypeScript |
+| テスト（E2E・API） | Playwright + TypeScript |
+| テスト（ユニット） | Vitest + jsdom + TypeScript |
 | CI/CD | GitHub Actions |
 | 公開 | GitHub Pages |
 | データ | localStorage（サーバー不要） |
@@ -31,7 +32,7 @@ GitHub Pages で公開中：
 ### テストピラミッド
 
 UIテストだけに頼ると「どこで壊れたか」の特定が遅くなります。  
-このプロジェクトでは **E2EテストとAPIテストの2層構造** を採用し、不具合の切り分けを素早くできる設計にしています。
+このプロジェクトでは **ユニットテスト・E2Eテスト・APIテストの3層構造** を採用し、不具合の切り分けを素早くできる設計にしています。
 
 ```
        ┌─────────────┐
@@ -40,6 +41,9 @@ UIテストだけに頼ると「どこで壊れたか」の特定が遅くなり
        ├─────────────┤
        │  API テスト  │  ← HTTP レベルのレスポンス・スキーマ検証
        │    7 件      │
+       ├─────────────┤
+       │ユニットテスト│  ← 関数単位のロジック検証（カバレッジ 93%）
+       │   33 件      │
        └─────────────┘
 ```
 
@@ -65,6 +69,7 @@ tests/e2e/pages/
 | セキュリティ | ログアウト後のアクセス制御 | 1件 |
 | シナリオ | 画面をまたいだ一連の業務フロー | 2件 |
 | APIスキーマ | レスポンスの型・構造の正しさ | 2件 |
+| ユニット | 関数単位のロジック・境界値検証 | 33件 |
 
 ---
 
@@ -123,6 +128,23 @@ tests/e2e/pages/
 | A-06 | DELETE /todos/1：200で空オブジェクトが返る | 正常系 |
 | A-07 | GET /todos/1：レスポンスの型がすべて正しい | スキーマ検証 |
 
+### ユニットテスト（Vitest）
+
+認証ロジック（`auth.ts`）とタスクCRUD（`store.ts`）を対象に、関数レベルで境界値を網羅しています。
+
+| 対象 | テスト内容 | 件数 |
+|------|-----------|------|
+| `validateEmail` | 空文字・形式不正・正常値 | 5件 |
+| `validatePassword` | 空文字・正常値 | 2件 |
+| `authenticate` | 正しい認証情報・メール違い・パスワード違い | 4件 |
+| `setAuth / clearAuth / isAuthenticated` | localStorage の読み書き | 3件 |
+| `requireAuth` | 未ログイン時のリダイレクト | 2件 |
+| `getTasks / addTask` | 初期状態・追加・フィールド検証 | 5件 |
+| `deleteTask` | 削除・他への影響なし | 3件 |
+| `toggleTask` | 完了⇔未完了の切り替え | 3件 |
+| `updateTask` | 部分更新・複数フィールド同時更新 | 3件 |
+| `getTaskById` | ID検索・存在しないID | 3件 |
+
 ---
 
 ## ローカルでの実行方法
@@ -140,11 +162,17 @@ npm run test:e2e
 # APIテストの実行
 npm run test:api
 
-# すべてのテストを実行
+# すべてのE2E+APIテストを実行
 npm run test
 
 # テストレポートを表示
 npm run test:report
+
+# ユニットテストの実行
+npm run test:unit
+
+# ユニットテスト（カバレッジ付き）
+npm run test:unit:coverage
 ```
 
 ---

@@ -2,6 +2,15 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.ts'],
+      exclude: ['src/**/*.test.ts', 'src/login.ts', 'src/taskList.ts', 'src/taskDetail.ts'],
+      thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
+    },
+  },
   root: 'src',
   // GitHub Pagesへデプロイする際はリポジトリ名をbaseに設定する
   // ローカル開発・CI（テスト実行）時は'/'のまま
