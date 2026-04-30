@@ -3,6 +3,7 @@ dist/
 playwright-report/
 test-results/
 .playwright/
+src/coverage/
 
 # 個人用ドキュメント（GitHubには公開しない）
 CLAUDE.md
